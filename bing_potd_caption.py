@@ -66,6 +66,6 @@ if r.status_code == 200:
 
     out_img_filename = "%s.%s" % (img_name, img.format.lower())
     out_img_path = os.path.join(folder_img_out, out_img_filename)
-    out_img.save(out_img_path, format=img.format)
+    out_img.convert("RGB").save(out_img_path, format=img.format)
 
     print("\n", out_img_path, "\n", img_caption)
