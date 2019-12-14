@@ -43,20 +43,21 @@ if r.status_code == 200:
     text_length = len(img_caption) * font_factor
 
     width, height = img.size
-    pad = 5
-    txt_box = {"x0": round(width / 2) - text_length - pad,
-               "y0": round(height * 0.95 - pad),
-               "x1": round(width / 2) + text_length + pad,
-               "y1": round(height * 0.965 + pad)}
+    hpad = 40
+    vpad = 5
+    txt_box = {"x0": round(width / 2) - text_length - hpad,
+               "y0": round(height * 0.95 - vpad),
+               "x1": round(width / 2) + text_length + hpad,
+               "y1": round(height * 0.965 + vpad)}
 
     # make a blank image for the text, initialized to transparent text color
     txt_img = Image.new("RGBA", img.size, (255, 255, 255, 0))
     draw_txt = ImageDraw.Draw(txt_img)
 
     draw_txt.rectangle([txt_box["x0"], txt_box["y0"], txt_box["x1"], txt_box["y1"]],
-                       fill=(0, 0, 0, 60))
+                       fill=(0, 0, 0, 180))
 
-    draw_txt.text((txt_box["x0"] + pad, txt_box["y0"] + pad),
+    draw_txt.text((txt_box["x0"] + hpad, txt_box["y0"] + vpad),
                   img_caption,
                   anchor="pepe",
                   fill=(255, 255, 255),
