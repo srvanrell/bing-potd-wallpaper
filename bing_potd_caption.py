@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 url_base = 'https://www.bing.com/'
 url_json = 'https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1'
 
-folder_img_out = "/home/sebastian/Pictures/my_wallpaper/"
+folder_img_out = os.path.expanduser(os.path.join("~", "Pictures/bing_potd_wallpapers/"))
 folder_temp = "/tmp"
 FONT_FILENAME = "/usr/share/fonts/truetype/freefont/FreeSans.ttf"
 
@@ -67,6 +67,8 @@ if r.status_code == 200:
 
     out_img = Image.alpha_composite(img_rgba, txt_img)
 
+    if not os.path.exists(folder_img_out):
+        os.makedirs(folder_img_out)
     out_img_filename = "%s.%s" % (img_name, img.format.lower())
     out_img_path = os.path.join(folder_img_out, out_img_filename)
     out_img.convert("RGB").save(out_img_path, format=img.format)
