@@ -23,7 +23,7 @@ if r.status_code == 200:
     img_name = raw_data["images"][0]["startdate"]
     img_description = raw_data["images"][0]["copyright"]
 
-    img_description = img_description[:img_description.find("(")]
+    img_description = img_description[:img_description.find(" (")]
 
     year, month, day = (img_name[:4], img_name[4:6], img_name[6:8])
     img_caption = "%s - %s/%s/%s" % (img_description, year, month, day)
