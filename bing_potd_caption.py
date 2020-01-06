@@ -27,7 +27,7 @@ if r.status_code == 200:
 
     year, month, day = (img_name[:4], img_name[4:6], img_name[6:8])
     img_caption = "%s - %s/%s/%s" % (img_description, year, month, day)
-
+    
     temp_filename = os.path.join(folder_temp, img_name)
     try:
         os.remove(temp_filename)
@@ -38,39 +38,42 @@ if r.status_code == 200:
     img_temp_filename = wget.download(url_img, temp_filename)
 
     img = Image.open(img_temp_filename)
-    img_rgba = img.convert("RGBA")
-
-    font = ImageFont.truetype(FONT_FILENAME, 16)
-    font_factor = 3.6
-    text_length = len(img_caption) * font_factor
-
-    width, height = img.size
-    hpad = 40
-    vpad = 5
-    txt_box = {"x0": round(width / 2) - text_length - hpad,
-               "y0": round(height * 0.95 - vpad),
-               "x1": round(width / 2) + text_length + hpad,
-               "y1": round(height * 0.965 + vpad)}
-
-    # make a blank image for the text, initialized to transparent text color
-    txt_img = Image.new("RGBA", img.size, (255, 255, 255, 0))
-    draw_txt = ImageDraw.Draw(txt_img)
-
-    draw_txt.rectangle([txt_box["x0"], txt_box["y0"], txt_box["x1"], txt_box["y1"]],
-                       fill=(0, 0, 0, 180))
-
-    draw_txt.text((txt_box["x0"] + hpad, txt_box["y0"] + vpad),
-                  img_caption,
-                  anchor="center",
-                  fill=(255, 255, 255),
-                  font=font)
-
-    out_img = Image.alpha_composite(img_rgba, txt_img)
-
+    
     if not os.path.exists(folder_img_out):
         os.makedirs(folder_img_out)
     out_img_filename = "%s.%s" % (img_name, img.format.lower())
     out_img_path = os.path.join(folder_img_out, out_img_filename)
-    out_img.convert("RGB").save(out_img_path, format=img.format)
+    
+    if not os.path.exists(out_img_path):
+        img_rgba = img.convert("RGBA")
 
-    print("\n", out_img_path, "\n", img_caption)
+        font = ImageFont.truetype(FONT_FILENAME, 16)
+        font_factor = 3.6
+        text_length = len(img_caption) * font_factor
+
+        width, height = img.size
+        hpad = 40
+        vpad = 5
+        txt_box = {"x0": round(width / 2) - text_length - hpad,
+                "y0": round(height * 0.95 - vpad),
+                "x1": round(width / 2) + text_length + hpad,
+                "y1": round(height * 0.965 + vpad)}
+
+        # make a blank image for the text, initialized to transparent text color
+        txt_img = Image.new("RGBA", img.size, (255, 255, 255, 0))
+        draw_txt = ImageDraw.Draw(txt_img)
+
+        draw_txt.rectangle([txt_box["x0"], txt_box["y0"], txt_box["x1"], txt_box["y1"]],
+                        fill=(0, 0, 0, 180))
+
+        draw_txt.text((txt_box["x0"] + hpad, txt_box["y0"] + vpad),
+                    img_caption,
+                    anchor="center",
+                    fill=(255, 255, 255),
+                    font=font)
+
+        out_img = Image.alpha_composite(img_rgba, txt_img)
+
+        out_img.convert("RGB").save(out_img_path, format=img.format)
+
+        print("\n", out_img_path, "\n", img_caption)
